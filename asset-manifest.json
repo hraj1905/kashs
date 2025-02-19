@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/kashs/static/css/main.f855e6bc.css",
+    "main.js": "/kashs/static/js/main.fccba46d.js",
+    "static/js/413.92cb1dd4.chunk.js": "/kashs/static/js/413.92cb1dd4.chunk.js",
+    "static/js/705.fb337ddd.chunk.js": "/kashs/static/js/705.fb337ddd.chunk.js",
+    "static/js/453.c648e456.chunk.js": "/kashs/static/js/453.c648e456.chunk.js",
+    "static/js/987.f3973067.chunk.js": "/kashs/static/js/987.f3973067.chunk.js",
+    "index.html": "/kashs/index.html",
+    "main.f855e6bc.css.map": "/kashs/static/css/main.f855e6bc.css.map",
+    "main.fccba46d.js.map": "/kashs/static/js/main.fccba46d.js.map",
+    "413.92cb1dd4.chunk.js.map": "/kashs/static/js/413.92cb1dd4.chunk.js.map",
+    "705.fb337ddd.chunk.js.map": "/kashs/static/js/705.fb337ddd.chunk.js.map",
+    "453.c648e456.chunk.js.map": "/kashs/static/js/453.c648e456.chunk.js.map",
+    "987.f3973067.chunk.js.map": "/kashs/static/js/987.f3973067.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.fccba46d.js"
+  ]
+}
