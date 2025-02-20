@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import './Home.css';
 
 const Home = () => {
   const [value, setValue] = useState('');
@@ -28,15 +29,19 @@ const Home = () => {
 
   return (
     <div>
-      <h2>Enter Room Code</h2>
-      <input
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        type="text"
-        placeholder="Enter room code"
-      />
-      <button onClick={handleJoinRoom}>Join Room</button>
-      {roomId && <p>Current Room ID: {roomId}</p>}
+      <div className="header">Interactive Video Calling App</div>
+      <div className="container">
+        <h2>Enter Room Code</h2>
+        <input
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          type="text"
+          placeholder="Enter room code"
+        />
+        <button onClick={handleJoinRoom}>Join Room</button>
+        {roomId && <p>Current Room ID: {roomId}</p>}
+      </div>
+      <div className="footer">© 2023 Interactive Video Calling App</div>
     </div>
   );
 };

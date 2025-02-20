@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import './Room.css';
 
 const Room = () => {
   const { roomId } = useParams();
@@ -59,7 +60,7 @@ const Room = () => {
   }, [roomId, navigate]);
 
   return (
-    <div>
+    <div className="container">
       <h2>Room ID: {roomId}</h2>
       <div ref={roomContainerRef} style={{ width: "100%", height: "500px" }} />
     </div>
