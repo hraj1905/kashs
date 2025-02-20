@@ -1,61 +1,174 @@
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+/* Home container with full-page styling */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+  position: relative;
 }
 
-h2 {
-  color: #333;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-input[type="text"] {
+/* Background with animated gradient waves */
+.background-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  height: 100vh;
+  background: linear-gradient(135deg, #007bff, #6610f2);
+  animation: waveBackground 8s infinite alternate;
+  z-index: -1;
 }
 
-button {
+@keyframes waveBackground {
+  0% {
+    transform: scale(1);
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    transform: scale(1.1);
+    filter: hue-rotate(30deg);
+  }
+}
+
+/* Navigation bar */
+.navbar {
   width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.app-name {
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Profile Button */
+.profile-button {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 15px;
   border: none;
-  border-radius: 4px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.profile-button:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Centered content with Glassmorphism effect */
+.content {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+  width: 90%;
+  max-width: 450px;
+  margin-top: 100px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Input field */
+.room-input {
+  width: 100%;
+  padding: 12px;
+  margin: 15px 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 30px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.room-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.room-input:focus {
+  border-color: white;
+}
+
+/* Join Room Button */
+.join-button {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  border: none;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s ease;
+  transition: 0.3s;
+  font-weight: bold;
 }
 
-button:hover {
-  background-color: #0056b3;
+.join-button:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
 }
 
-p {
-  text-align: center;
-  color: #666;
-}
-
-/* Loading spinner */
+/* Loading Spinner */
 .spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #000;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-left-color: white;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   animation: spin 1s linear infinite;
-  margin: 20px auto;
+  display: inline-block;
 }
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-button {
+    margin-top: 10px;
   }
 }

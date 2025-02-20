@@ -1,52 +1,48 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
-  const [value, setValue] = useState('');
+  const [roomId, setRoomId] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { roomId } = useParams();
 
-  useEffect(() => {
-    console.log('Room ID from URL:', roomId); // Debugging statement
-    if (roomId) {
-      setValue(roomId);
-    }
-  }, [roomId]);
-
-  const handleJoinRoom = useCallback(() => {
-    console.log('Join Room button clicked'); // Debugging statement
-    console.log('Room code entered:', value); // Debugging statement
-    if (value.trim() !== "") {
+  const handleJoinRoom = () => {
+    if (roomId.trim() !== '') {
       setLoading(true);
-      console.log(`Navigating to /room/${value}`); // Debugging statement
-      navigate(`/room/${value}`);
+      navigate(`/room/${roomId}`);
     } else {
-      alert("Please enter a valid room code");
+      alert('Please enter a valid room ID');
     }
-  }, [navigate, value]);
-
-  console.log('Home component rendered');
+  };
 
   return (
-    <div>
-      <div className="header">Interactive Video Calling App</div>
-      <div className="container">
-        <h2>Enter Room Code</h2>
+    <div className="home-container">
+      <div className="background-animation"></div>
+
+      <nav className="navbar">
+        <div className="logo-section">
+          <h1 className="app-name">Kash</h1>
+        </div>
+        <div className="profile-section">
+          <button className="profile-button">Profile</button>
+        </div>
+      </nav>
+
+      <div className="content">
+        <h2>Welcome to Kash</h2>
+        <p>Enter a room ID to join a video call.</p>
         <input
-          value={value}
-          onChange={e => setValue(e.target.value)}
           type="text"
-          placeholder="Enter room code"
+          className="room-input"
+          placeholder="Enter Room ID"
+          value={roomId}
+          onChange={(e) => setRoomId(e.target.value)}
         />
-        <button onClick={handleJoinRoom} disabled={loading}>
-          {loading ? 'Joining...' : 'Join Room'}
+        <button className="join-button" onClick={handleJoinRoom} disabled={loading}>
+          {loading ? <div className="spinner"></div> : 'Join Room'}
         </button>
-        {loading && <div className="spinner"></div>}
-        {roomId && <p>Current Room ID: {roomId}</p>}
       </div>
-      <div className="footer">© 2023 Interactive Video Calling App</div>
     </div>
   );
 };

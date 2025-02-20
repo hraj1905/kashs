@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import './Room.css';
+import { fetchWithTimeout } from '../../utils/fetchWithTimeout';
 
 const Room = () => {
   const { roomId } = useParams();
@@ -38,33 +39,74 @@ const Room = () => {
 
     console.log("Attempting to join the room...");
 
-    const joinRoom = () => {
-      zc.joinRoom({
-        container: roomContainerRef.current,
-        sharedLinks: [{
-          name: "Copy Link",
-          url: `http://localhost:3000/room/${roomId}`,
-        }],
-        scenario: {
-          mode: ZegoUIKitPrebuilt.OneONoneCall,
-        },
-      }).then(() => {
-        console.log("Successfully joined the room");
-        setLoading(false);
-      }).catch((error) => {
-        console.error("Error joining the room:", error);
-        if ((error.code === 1100002 || error.code === 1104036) && retryCount < 3) {
-          console.log(`Retrying to join the room... (${retryCount + 1})`);
-          setRetryCount(retryCount + 1);
-          setTimeout(joinRoom, 2000); // Retry after 2 seconds
-        } else {
-          setLoading(false);
-          alert("Failed to join the room. Please try again.");
-        }
+    const joinRoom = (roomId) => {
+      return new Promise((resolve, reject) => {
+        // Simulate an async operation
+        setTimeout(() => {
+          if (roomId) {
+            resolve(`Joined room ${roomId}`);
+          } else {
+            reject('Room ID is required');
+          }
+        }, 1000);
       });
     };
 
-    joinRoom();
+    fetchWithTimeout(`https://your-api-endpoint.com/rooms/${roomId}`, {}, 30000, 3, 3000)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Parsed response data:', data);
+        if (data.success) {
+          joinRoom(roomId)
+            .then((message) => {
+              console.log(message);
+              zc.joinRoom({
+                container: roomContainerRef.current,
+                sharedLinks: [{
+                  name: "Copy Link",
+                  url: `http://localhost:3000/room/${roomId}`,
+                }],
+                scenario: {
+                  mode: ZegoUIKitPrebuilt.OneONoneCall,
+                },
+              }).then(() => {
+                console.log("Successfully joined the room");
+                setLoading(false);
+              }).catch((error) => {
+                console.error("Error joining the room:", error);
+                if ((error.code === 1100002 || error.code === 1104036) && retryCount < 3) {
+                  console.log(`Retrying to join the room... (${retryCount + 1})`);
+                  setRetryCount(retryCount + 1);
+                  setTimeout(() => joinRoom(roomId), 2000); // Retry after 2 seconds
+                } else {
+                  setLoading(false);
+                  alert("Failed to join the room. Please try again.");
+                }
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          alert('Room not found');
+          navigate('/');
+        }
+      })
+      .catch(error => {
+        console.error("Network timeout or error:", error);
+        alert('Failed to join the room. Please try again.');
+        navigate('/');
+      });
+
+    // Cleanup function to leave the room when the component unmounts
+    return () => {
+      if (zc && typeof zc.leaveRoom === 'function') {
+        zc.leaveRoom();
+        console.log("Left the room");
+      } else {
+        console.warn("zc.leaveRoom is not a function");
+      }
+    };
 
   }, [roomId, navigate, retryCount]);
 
