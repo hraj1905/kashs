@@ -15,3 +15,8 @@ root.render(
 );
 
 reportWebVitals();
+
+// Fallback for unsupported browsers
+if (!window.Promise) {
+  alert('Your browser is not supported. Please update your browser.');
+}

@@ -4,6 +4,7 @@ import './Home.css';
 
 const Home = () => {
   const [value, setValue] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { roomId } = useParams();
 
@@ -18,6 +19,7 @@ const Home = () => {
     console.log('Join Room button clicked'); // Debugging statement
     console.log('Room code entered:', value); // Debugging statement
     if (value.trim() !== "") {
+      setLoading(true);
       console.log(`Navigating to /room/${value}`); // Debugging statement
       navigate(`/room/${value}`);
     } else {
@@ -38,7 +40,10 @@ const Home = () => {
           type="text"
           placeholder="Enter room code"
         />
-        <button onClick={handleJoinRoom}>Join Room</button>
+        <button onClick={handleJoinRoom} disabled={loading}>
+          {loading ? 'Joining...' : 'Join Room'}
+        </button>
+        {loading && <div className="spinner"></div>}
         {roomId && <p>Current Room ID: {roomId}</p>}
       </div>
       <div className="footer">© 2023 Interactive Video Calling App</div>
