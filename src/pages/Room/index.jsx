@@ -1,11 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import './Room.css';
 
 const Room = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const roomContainerRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     console.log('Room component mounted'); // Debugging statement
@@ -35,33 +38,44 @@ const Room = () => {
 
     console.log("Attempting to join the room...");
 
-    const joinRoomPromise = zc.joinRoom({
-      container: roomContainerRef.current,
-      sharedLinks: [{
-        name: "Copy Link",
-        url: `http://localhost:3000/room/${roomId}`,
-      }],
-      scenario: {
-        mode: ZegoUIKitPrebuilt.OneONoneCall,
-      },
-    });
-
-    if (joinRoomPromise && typeof joinRoomPromise.then === 'function') {
-      joinRoomPromise.then(() => {
+    const joinRoom = () => {
+      zc.joinRoom({
+        container: roomContainerRef.current,
+        sharedLinks: [{
+          name: "Copy Link",
+          url: `http://localhost:3000/room/${roomId}`,
+        }],
+        scenario: {
+          mode: ZegoUIKitPrebuilt.OneONoneCall,
+        },
+      }).then(() => {
         console.log("Successfully joined the room");
+        setLoading(false);
       }).catch((error) => {
         console.error("Error joining the room:", error);
+        if ((error.code === 1100002 || error.code === 1104036) && retryCount < 3) {
+          console.log(`Retrying to join the room... (${retryCount + 1})`);
+          setRetryCount(retryCount + 1);
+          setTimeout(joinRoom, 2000); // Retry after 2 seconds
+        } else {
+          setLoading(false);
+          alert("Failed to join the room. Please try again.");
+        }
       });
-    } else {
-      console.error("zc.joinRoom did not return a promise");
-    }
+    };
 
-  }, [roomId, navigate]);
+    joinRoom();
+
+  }, [roomId, navigate, retryCount]);
 
   return (
-    <div>
+    <div className="container">
       <h2>Room ID: {roomId}</h2>
-      <div ref={roomContainerRef} style={{ width: "100%", height: "500px" }} />
+      {loading ? (
+        <div className="spinner"></div>
+      ) : (
+        <div ref={roomContainerRef} className="video-container" />
+      )}
     </div>
   );
 };
