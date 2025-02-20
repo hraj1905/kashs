@@ -10,7 +10,7 @@ export const fetchWithTimeout = (url, options = {}, timeout = 30000, retries = 3
         }
       }, timeout);
 
-      fetch(url, options)
+      fetch(url, { ...options, mode: 'cors' })
         .then(response => {
           clearTimeout(timer);
           resolve(response);

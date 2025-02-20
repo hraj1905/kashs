@@ -39,16 +39,29 @@ const Room = () => {
 
     console.log("Attempting to join the room...");
 
-    const joinRoom = (roomId) => {
-      return new Promise((resolve, reject) => {
-        // Simulate an async operation
-        setTimeout(() => {
-          if (roomId) {
-            resolve(`Joined room ${roomId}`);
-          } else {
-            reject('Room ID is required');
-          }
-        }, 1000);
+    const joinRoom = () => {
+      zc.joinRoom({
+        container: roomContainerRef.current,
+        sharedLinks: [{
+          name: "Copy Link",
+          url: `http://localhost:3000/room/${roomId}`,
+        }],
+        scenario: {
+          mode: ZegoUIKitPrebuilt.OneONoneCall,
+        },
+      }).then(() => {
+        console.log("Successfully joined the room");
+        setLoading(false);
+      }).catch((error) => {
+        console.error("Error joining the room:", error);
+        if ((error.code === 1100002 || error.code === 1104036) && retryCount < 3) {
+          console.log(`Retrying to join the room... (${retryCount + 1})`);
+          setRetryCount(retryCount + 1);
+          setTimeout(joinRoom, 2000); // Retry after 2 seconds
+        } else {
+          setLoading(false);
+          alert("Failed to join the room. Please try again.");
+        }
       });
     };
 
@@ -57,36 +70,7 @@ const Room = () => {
       .then(data => {
         console.log('Parsed response data:', data);
         if (data.success) {
-          joinRoom(roomId)
-            .then((message) => {
-              console.log(message);
-              zc.joinRoom({
-                container: roomContainerRef.current,
-                sharedLinks: [{
-                  name: "Copy Link",
-                  url: `http://localhost:3000/room/${roomId}`,
-                }],
-                scenario: {
-                  mode: ZegoUIKitPrebuilt.OneONoneCall,
-                },
-              }).then(() => {
-                console.log("Successfully joined the room");
-                setLoading(false);
-              }).catch((error) => {
-                console.error("Error joining the room:", error);
-                if ((error.code === 1100002 || error.code === 1104036) && retryCount < 3) {
-                  console.log(`Retrying to join the room... (${retryCount + 1})`);
-                  setRetryCount(retryCount + 1);
-                  setTimeout(() => joinRoom(roomId), 2000); // Retry after 2 seconds
-                } else {
-                  setLoading(false);
-                  alert("Failed to join the room. Please try again.");
-                }
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-            });
+          joinRoom();
         } else {
           alert('Room not found');
           navigate('/');
