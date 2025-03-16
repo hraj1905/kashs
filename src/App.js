@@ -1,20 +1,21 @@
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import Room from './pages/Room';
+import NotFound from './pages/NotFound';
+import Navbar from './components/Navbar/Navbar';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
-
-const Home = lazy(() => import('./pages/Home'));
-const Room = lazy(() => import('./pages/Room'));
-const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
   return (
-    <Suspense fallback={<div className="spinner"></div>}>
+    <>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/room/:roomId" element={<Room />} /> {/* Ensure :roomId is used */}
-        <Route path="*" element={<NotFound />} /> {/* Add NotFound route */}
+        <Route path="/room/:roomId" element={<Room />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-    </Suspense>
+    </>
   );
 }
 

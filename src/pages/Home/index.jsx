@@ -3,23 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
-  const [roomId, setRoomId] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [roomCode, setRoomCode] = useState('');
   const navigate = useNavigate();
 
-  const handleJoinRoom = () => {
-    if (roomId.trim() !== '') {
-      setLoading(true);
-      navigate(`/room/${roomId}`);
+  const handleJoin = () => {
+    if (roomCode.trim()) {
+      navigate(`/room/${roomCode}`);
     } else {
-      alert('Please enter a valid room ID');
+      alert('Please enter a valid room code.');
     }
   };
 
   return (
     <div className="home-container">
-      <div className="background-animation"></div>
-
       <nav className="navbar">
         <div className="logo-section">
           <h1 className="app-name">Kash</h1>
@@ -30,18 +26,16 @@ const Home = () => {
       </nav>
 
       <div className="content">
-        <h2>Welcome to Kash</h2>
-        <p>Enter a room ID to join a video call.</p>
+        <h2>Join a Room</h2>
+        <p>Enter the room code to join a video call</p>
         <input
           type="text"
+          value={roomCode}
+          onChange={(e) => setRoomCode(e.target.value)}
+          placeholder="Room Code"
           className="room-input"
-          placeholder="Enter Room ID"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value)}
         />
-        <button className="join-button" onClick={handleJoinRoom} disabled={loading}>
-          {loading ? <div className="spinner"></div> : 'Join Room'}
-        </button>
+        <button onClick={handleJoin} className="join-button">Join</button>
       </div>
     </div>
   );
