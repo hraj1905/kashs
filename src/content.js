@@ -1,8 +1,9 @@
 function isLoginPage() {
   try {
-    return document.querySelector('button:contains("Login")') !== null;
+    const button = document.querySelector('button');
+    return button && button.innerText.includes("Login");
   } catch (error) {
-    console.error("Invalid selector:", error);
+    console.error("Error checking login page:", error);
     return false;
   }
 }

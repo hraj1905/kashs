@@ -10,7 +10,7 @@ const Home = () => {
     if (roomCode.trim()) {
       navigate(`/room/${roomCode}`);
     } else {
-      alert('Please enter a valid room code.');
+      console.error('Please enter a valid room code.');
     }
   };
 
