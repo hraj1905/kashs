@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
   const [roomCode, setRoomCode] = useState('');
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    setUser(userData);
+  }, []);
 
   const handleJoin = () => {
     if (roomCode.trim()) {
@@ -14,11 +20,20 @@ const Home = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
   return (
     <div className="home-container">
       <nav className="navbar">
         <div className="logo-section">
           <h1 className="app-name">Kash</h1>
+        </div>
+        <div className="profile-section">
+          <span className="user-email">{user?.email}</span>
+          <button onClick={handleLogout} className="profile-button">Logout</button>
         </div>
       </nav>
 

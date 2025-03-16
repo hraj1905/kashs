@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({
-    email: '',
-    password: ''
-  });
   const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(true);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCredentials(prev => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value
     }));
@@ -19,41 +22,95 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Implement actual authentication logic here
-    console.log('Login attempt with:', credentials);
-    // For now, just redirect to home
+    setError('');
+
+    // Basic validation
+    if (!formData.email || !formData.password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (!isLogin) {
+      // Additional signup validation
+      if (formData.password !== formData.confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
+      if (formData.password.length < 6) {
+        setError('Password must be at least 6 characters long');
+        return;
+      }
+    }
+
+    // Store user data in localStorage
+    localStorage.setItem('user', JSON.stringify({
+      email: formData.email,
+      isAuthenticated: true
+    }));
+
+    // Navigate to home page after successful login/signup
     navigate('/');
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Login to Kash</h2>
-        <form onSubmit={handleSubmit}>
+        <h1>Welcome to Kash</h1>
+        <form onSubmit={handleSubmit} className="login-form">
+          {error && <div className="error-message">{error}</div>}
           <div className="form-group">
-            <label htmlFor="email">Email</label>
             <input
               type="email"
-              id="email"
               name="email"
-              value={credentials.email}
+              value={formData.email}
               onChange={handleChange}
-              required
+              placeholder="Email"
+              className="form-input"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
             <input
               type="password"
-              id="password"
               name="password"
-              value={credentials.password}
+              value={formData.password}
               onChange={handleChange}
-              required
+              placeholder="Password"
+              className="form-input"
             />
           </div>
-          <button type="submit" className="login-submit">Login</button>
+          {!isLogin && (
+            <div className="form-group">
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm Password"
+                className="form-input"
+              />
+            </div>
+          )}
+          <button type="submit" className="login-button">
+            {isLogin ? 'Login' : 'Sign Up'}
+          </button>
         </form>
+        <p className="toggle-form">
+          {isLogin ? "Don't have an account? " : 'Already have an account? '}
+          <button
+            type="button"
+            className="toggle-button"
+            onClick={() => setIsLogin(!isLogin)}
+          >
+            {isLogin ? 'Sign Up' : 'Login'}
+          </button>
+        </p>
       </div>
     </div>
   );
