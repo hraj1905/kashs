@@ -44,6 +44,11 @@ function App() {
     return <div className="spinner"></div>;
   }
 
+  // Redirect authenticated users away from login page
+  if (isAuthenticated && window.location.pathname === '/login') {
+    return <Navigate to="/" />;
+  }
+
   return (
     <Suspense fallback={<div className="spinner"></div>}>
       <Routes>

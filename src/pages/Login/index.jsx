@@ -49,14 +49,28 @@ const Login = () => {
       }
     }
 
-    // Mock authentication check (in a real app, this would be an API call)
+    // Mock authentication check with predefined test credentials
     const mockAuthCheck = () => {
-      // Simulating a server check
       if (isLogin) {
-        // In a real app, you would verify credentials against a backend
+        // Test credentials for demonstration
+        const testCredentials = [
+          { email: 'test@example.com', password: 'password123' },
+          { email: 'admin@kash.com', password: 'admin123' }
+        ];
+
+        const matchingUser = testCredentials.find(
+          user => user.email === formData.email && user.password === formData.password
+        );
+
+        if (!matchingUser) {
+          return { success: false, message: 'Invalid email or password' };
+        }
         return { success: true, message: 'Login successful' };
       } else {
-        // In a real app, you would create a new user in the backend
+        // Simulate a taken email address
+        if (formData.email === 'test@example.com' || formData.email === 'admin@kash.com') {
+          return { success: false, message: 'Email already registered' };
+        }
         return { success: true, message: 'Account created successfully' };
       }
     };
